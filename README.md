@@ -1,4 +1,4 @@
-# terraform.aws
+# aws.terraform
 
 Let's build a basic dev environment:
 
