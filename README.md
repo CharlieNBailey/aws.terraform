@@ -2,7 +2,7 @@
 
 Let's build a basic dev environment:
 
-Setup
+Initial Setup
 - Procure access key from AWS management console to allow programmatic access
 - Grant admin access to the IAM user
 - Download the AWS extension for VS Code
