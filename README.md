@@ -1,8 +1,6 @@
 # aws.terraform
 
-Let's build a basic dev environment:
-
-Initial Setup
+Initial Setup:
 - Procure access key from AWS management console to allow programmatic access
 - Grant admin access to the IAM user
 - Download the AWS extension for VS Code
@@ -11,7 +9,8 @@ Initial Setup
 - Navigate to 'AWS Provider' info on Terraform website
 - Copy code to add AWS as provider
 
-Let's get building
+
+Let's build a web app:
 - Deploy the VPC
 - Configure networking for the VPC
 - To view the VPC & network info, navigate to AWS pane > Resources
