@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2708
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 terraform \{\
+  #############################################################\
+  ## AFTER RUNNING TERRAFORM APPLY (WITH LOCAL BACKEND)\
+  ## YOU WILL UNCOMMENT THIS CODE THEN RERUN TERRAFORM INIT\
+  ## TO SWITCH FROM LOCAL BACKEND TO REMOTE AWS BACKEND\
+  #############################################################\
+  # backend "s3" \{\
+  #   bucket         = "devops-directive-tf-state" # REPLACE WITH YOUR BUCKET NAME\
+  #   key            = "03-basics/import-bootstrap/terraform.tfstate"\
+  #   region         = "us-east-1"\
+  #   dynamodb_table = "terraform-state-locking"\
+  #   encrypt        = true\
+  # \}\
+\
+  required_providers \{\
+    aws = \{\
+      source  = "hashicorp/aws"\
+      version = "~> 3.0"\
+    \}\
+  \}\
+\}\
+\
+provider "aws" \{\
+  region = "us-east-1"\
+\}\
+\
+resource "aws_s3_bucket" "terraform_state" \{\
+  bucket        = "devops-directive-tf-state" # REPLACE WITH YOUR BUCKET NAME\
+  force_destroy = true\
+\}\
+\
+resource "aws_s3_bucket_versioning" "terraform_bucket_versioning" \{\
+  bucket = aws_s3_bucket.terraform_state.id\
+  versioning_configuration \{\
+    status = "Enabled"\
+  \}\
+\}\
+\
+resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_crypto_conf" \{\
+  bucket        = aws_s3_bucket.terraform_state.bucket \
+  rule \{\
+    apply_server_side_encryption_by_default \{\
+      sse_algorithm = "AES256"\
+    \}\
+  \}\
+\}\
+\
+resource "aws_dynamodb_table" "terraform_locks" \{\
+  name         = "terraform-state-locking"\
+  billing_mode = "PAY_PER_REQUEST"\
+  hash_key     = "LockID"\
+  attribute \{\
+    name = "LockID"\
+    type = "S"\
+  \}\
+\}}
